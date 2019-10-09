@@ -17,7 +17,8 @@ def remove_punct(text):
     >>> remove_punct(",go!So.?uTh")
     'goSouTh'
     """
-    pass # The pass statement does nothing. Replace it with the body of your function.
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    return text
     
     
 def remove_spaces(text):
@@ -36,7 +37,8 @@ def remove_spaces(text):
     >>> remove_spaces("   ")
     ''
     """
-    pass
+    text = text.strip()
+    return text
 
 
 def normalise_input(user_input):
@@ -51,7 +53,15 @@ def normalise_input(user_input):
     >>> normalise_input("HELP!!!!!!!")
     'help'
     """
-    pass
+
+    #remove any punctuation
+    user_input = remove_punct(user_input)
+    #remove any leading and trailing sapces
+    user_input = remove_spaces(user_input)
+    # #make it all lower case
+    user_input = user_input.lower()
+    #return final value
+    return user_input
 
     
 def display_room(room):
@@ -156,7 +166,10 @@ def is_valid_exit(exits, user_input):
     >>> is_valid_exit(rooms["Parking"]["exits"], "east")
     True
     """
-    pass
+    Output = False
+    if user_input in exits:
+        Output = True
+    return Output
 
 
 def menu(exits):
@@ -171,7 +184,6 @@ def menu(exits):
 
     # Repeat until the player enter a valid choice
     while True:
-        pass
         # COMPLETE THIS PART:
         
         # Display menu
@@ -179,11 +191,11 @@ def menu(exits):
         # Read player's input
         plr_input = input()
         # Normalise the input
-        #normalised_input = normalise_input(plr_input)
+        normalised_input = normalise_input(plr_input)
         # Check if the input makes sense (is valid exit)
-        #if is_valid_exit(exits,normalised_input):
+        if is_valid_exit(exits,normalised_input):
             # If so, return the player's choice
-            #return normalised_input
+            return normalised_input
 
 
 
@@ -200,7 +212,10 @@ def move(exits, direction):
     >>> move(rooms["Reception"]["exits"], "west") == rooms["Office"]
     False
     """
-    pass
+
+    Output = ""
+    Output = rooms[exits[direction]]
+    return Output
 
 
 
@@ -220,7 +235,7 @@ def main():
         direction = menu(exits)
 
         # Move the protagonist, i.e. update the current room
-        #current_room = move(exits, direction)
+        current_room = move(exits, direction)
 
 
 # Are we being run as a script? If so, run main().
