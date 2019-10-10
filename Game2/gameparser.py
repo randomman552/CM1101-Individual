@@ -27,7 +27,11 @@ def filter_words(words, skip_words):
     ['go', 'passage', 'south']
 
     """
-    pass
+    Output = []
+    for word in words:
+        if not (word in skip_words):
+            Output.append(word)
+    return Output
 
     
 def remove_punct(text):
@@ -50,6 +54,29 @@ def remove_punct(text):
 
     return no_punct
 
+def split_words(text):
+    """This function splits a sentence into a number of words.
+    It returns the result as a list containing the words. For example:
+    >>> split_words("go west")
+    ['go', 'west']
+    >>> split_words("please   help   me")
+    ['please', 'help', 'me']
+    >>> split_words("door stuck")
+    ['door', 'stuck']
+    """
+
+    Output = []
+    word_start = 0
+    word_end = 0
+    for ch in text:
+        if ch == " ":
+            to_be_added = text[word_start:word_end]
+            if not(to_be_added == ""):
+                Output.append(to_be_added)
+            word_start = word_end + 1
+        word_end = word_end + 1
+    Output.append(text[word_start:word_end])
+    return Output
 
 def normalise_input(user_input):
     """This function removes all punctuation from the string and converts it to
@@ -76,9 +103,13 @@ def normalise_input(user_input):
     ['go', 'passage', 'south']
 
     """
-    # Remove punctuation and convert to lower case
+    #Remove punctuation and convert to lower case
     no_punct = remove_punct(user_input).lower()
-
-    #
-    # COMPLETE ME!
-    #
+    #Remove leading and trailing spaces
+    no_spaces = no_punct.strip()
+    #Split into separate words
+    words = split_words(no_spaces)
+    #Remove unimportant words
+    no_unimportant_words = filter_words(words,skip_words)
+    #return words
+    return no_unimportant_words
