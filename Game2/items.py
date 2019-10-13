@@ -49,3 +49,20 @@ item_handbook = {
 
     "description": "This student handbook explains everything. Seriously."
 }
+
+item_void = {
+    "id": "void",
+
+    "name": "the void",
+
+    "description": "B̺͍̹̜̲̖̫E̦͍͇̪͔̿̓ͪ̆͒Hͩ͑Ò͂͐̄̋ͧ͢L̑̎D̰̗̗̠̝ T̡͂̀̄͛̐͗H̛͔̱È V̜̱̺̗͓̽͒ͫͬ́O̶̩͉͈͉̟͕ID̨̙̤̩"
+}
+items = {
+    "id": item_id,
+    "laptop": item_laptop,
+    "money": item_money,
+    "biscuits": item_biscuits,
+    "pen": item_pen,
+    "handbook": item_handbook,
+    "void": item_void
+}

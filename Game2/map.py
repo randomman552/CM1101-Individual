@@ -13,7 +13,11 @@ south and east. The exit is to the west.""",
 
     "exits": {"south": "Admins", "east": "Tutor", "west": "Parking"},
 
-    "items": [item_biscuits, item_handbook]
+    "items": [item_biscuits, item_handbook],
+
+    "win conditions": {
+        "player inv"
+    }
 }
 
 room_admins = {
@@ -26,7 +30,11 @@ ignore you. To the north is the reception.""",
 
     "exits":  {"north": "Reception"},
 
-    "items": []
+    "items": [],
+
+    "win conditions": {
+
+    }
 }
 
 room_tutor = {
@@ -40,7 +48,11 @@ pack of biscuits. The reception is to the west.""",
 
     "exits": {"west": "Reception"},
 
-    "items": []
+    "items": [],
+
+    "win conditions": {
+
+    }
 }
 
 room_parking = {
@@ -53,7 +65,11 @@ general office.""",
 
     "exits": {"east": "Office", "south": "Reception"},
 
-    "items": []
+    "items": [],
+
+    "win conditions": {
+
+    }
 }
 
 room_office = {
@@ -65,17 +81,35 @@ room_office = {
 in their eyes. If you go west you can return to the
 Queen's Buildings.""",
 
-    "exits": {"west": "Parking"},
+    "exits": {"west": "Parking", "nowhere": "Mystery"},
 
-    "items": [item_pen]
+    "items": [item_pen],
+
+    "win conditions": {
+
+    }
 }
 
+room_mystery = {
+    "name": "Mystery",
 
+    "description": """You walk into the room, everything is black, except for the entrance behind you. 
+    There is nothing here.""",
+    
+    "exits": {"west": "Parking"},
+    
+    "items": [item_void],
+
+    "win conditions": {
+
+    }
+}
 
 rooms = {
     "Reception": room_reception,
     "Admins": room_admins,
     "Tutor": room_tutor,
     "Parking": room_parking,
-    "Office": room_office
+    "Office": room_office,
+    "Mystery": room_mystery
 }

@@ -4,7 +4,8 @@ from map import rooms
 from player import *
 from items import *
 from gameparser import *
-
+import os
+os.system("mode con: cols=180 lines=50")
 
 
 def list_of_items(items):
@@ -24,8 +25,12 @@ def list_of_items(items):
     'money, a student handbook, laptop'
 
     """
-    pass
-
+    Output = ""
+    for item in items:
+        Output = Output + item["name"]
+        if not (item == items[len(items) - 1]):
+            Output = Output + ", "
+    return Output
 
 def print_room_items(room):
     """This function takes a room as an input and nicely displays a list of items
@@ -49,8 +54,10 @@ def print_room_items(room):
     Note: <BLANKLINE> here means that doctest should expect a blank line.
 
     """
-    pass
-
+    items_in_room = list_of_items(room["items"])
+    if not (items_in_room == ''):
+        print("There is " + items_in_room + " here.")
+        print("")
 
 def print_inventory_items(items):
     """This function takes a list of inventory items and displays it nicely, in a
@@ -62,7 +69,10 @@ def print_inventory_items(items):
     <BLANKLINE>
 
     """
-    pass
+    items_in_inven = list_of_items(items)
+    if not (items_in_inven == ''):
+        print("You have " + items_in_inven + ".")
+        print("")
 
 
 def print_room(room):
@@ -118,10 +128,7 @@ def print_room(room):
     # Display room description
     print(room["description"])
     print()
-
-    #
-    # COMPLETE ME!
-    #
+    print_room_items(room)
 
 def exit_leads_to(exits, direction):
     """This function takes a dictionary of exits and a direction (a particular
@@ -152,6 +159,14 @@ def print_exit(direction, leads_to):
     GO SOUTH to MJ and Simon's room.
     """
     print("GO " + direction.upper() + " to " + leads_to + ".")
+
+def print_take_item(item):
+    """This function prints a line of a menu of items which can be taken"""
+    print("TAKE " + item["id"].upper() + " to take " + item["name"] + ".")
+
+def print_drop_item(item):
+    """This function prints a line of a menu of items which can be dropped"""
+    print("DROP " + item["id"].upper() + " to drop " + item["name"] + ".")
 
 
 def print_menu(exits, room_items, inv_items):
@@ -185,14 +200,17 @@ def print_menu(exits, room_items, inv_items):
 
     """
     print("You can:")
-    # Iterate over available exits
+    # Iterate over available exits.
     for direction in exits:
-        # Print the exit name and where it leads to
+        # Print the exit name and where it leads to.
         print_exit(direction, exit_leads_to(exits, direction))
-
-    #
-    # COMPLETE ME!
-    #
+    #Print the items which you can take.
+    for item in current_room["items"]:
+        print_take_item(item)
+    #Print the items which you can drop
+    for item in inventory:
+        print_drop_item(item)
+        
     
     print("What do you want to do?")
 
@@ -222,7 +240,13 @@ def execute_go(direction):
     (and prints the name of the room into which the player is
     moving). Otherwise, it prints "You cannot go there."
     """
-    pass
+    global current_room
+    if is_valid_exit(current_room["exits"],direction):
+        current_room = move(current_room["exits"],direction)
+        print("Moving to " + current_room["name"])
+    else:
+        print("You cannot go there.")
+    
 
 
 def execute_take(item_id):
@@ -231,7 +255,16 @@ def execute_take(item_id):
     there is no such item in the room, this function prints
     "You cannot take that."
     """
-    pass
+    if item_id in items:
+        item_id = items[item_id]
+        if item_id in current_room["items"]:
+            inventory.append(item_id)
+            current_room["items"].remove(item_id)
+        else:
+            print("You cannot take that.")
+    else:
+        print("That item does not exist.")
+        
     
 
 def execute_drop(item_id):
@@ -239,8 +272,25 @@ def execute_drop(item_id):
     player's inventory to list of items in the current room. However, if there is
     no such item in the inventory, this function prints "You cannot drop that."
     """
-    pass
+    if item_id in items:
+        item_id = items[item_id]
+        if item_id in inventory:
+            inventory.remove(item_id)
+            current_room["items"].append(item_id)
+        else:
+            print("You cannot drop that.")
+    else:
+        print("That item does not exist.")
     
+def execute_inspect(item_id):
+    if item_id in items:
+        item_id = items[item_id]
+        if item_id in inventory:
+            print(item_id["description"])
+        else:
+            print("You cannot inspect that.")
+    else:
+        print("That item does not exist.")
 
 def execute_command(command):
     """This function takes a command (a list of words as returned by
@@ -271,6 +321,12 @@ def execute_command(command):
         else:
             print("Drop what?")
 
+    elif command[0] == "inspect":
+        if len(command) > 1:
+            execute_inspect(command[1])
+        else:
+            print("Inspect what?")
+    
     else:
         print("This makes no sense.")
 
@@ -312,12 +368,26 @@ def move(exits, direction):
     # Next room to go to
     return rooms[exits[direction]]
 
+def check_win_conditions():
+    """This function checks whether win conditions have been met.
+    If the win conditions are true then it will return true"""
+    Output = False
+    #If the reception contains all items, player wins
+    for item in items:
+        item = items[item]
+        if item in rooms["Reception"]["items"]:
+            Output = True
+        else:
+            Output = False
+            break
+    return Output
 
 # This is the entry point of our program
 def main():
-
     # Main game loop
-    while True:
+    win = False
+    while win == False:
+        os.system("cls")
         # Display game status (room description, inventory etc.)
         print_room(current_room)
         print_inventory_items(inventory)
@@ -327,6 +397,50 @@ def main():
 
         # Execute the player's command
         execute_command(command)
+
+        #Check win conditions
+        win = check_win_conditions()
+        os.system("pause")
+    os.system("cls")
+    print("""
+    ,,.*./././,***/,/,/,/,*,,*./././,*,,*,*.*./.*,*,.,.,./,(*//*/*(,(,/*/**/*(/#/#(#(###%#&#&#%##%#%(%(%/%(##(#(%#%(%#
+    ,*,*./,(,(*//*(*(,(,/,**,,,*,/,/,/,**,/,/./.*,,,,*(#,/,/,/*,/*(*#*(*/*,,,*,/./,((###%#%#&#/.*,,*,/.#/%(####(%(%#&#
+    **,/,##%%%%%%*(*#*#*(*/**/#%#%##((*//*/,/,#########%#%#%###//*(*#*#/(/**#%#%##,#####%(%#%#/,##%%##,#/%/#(#%(%#&#&#
+    */*(,(,#%%%%%((,(*#*(**,###%##/(,(//(*/*######((/(/#/#/##%##%##,(*(/(/**#%#%##,####(%(%(%(/,###%##,#*#/#((#(%(&#&#
+    */*(,(,#/#%%%##,(,(*(,((######,(*(////######(*///(*#*#*(/###%##/(.(*(/**#%#%##,((##(#/%/%//,###%##,(,(*(//(/%/%(%#
+    **,/,(,(,#%#%##((./,/.(###(#,/./,/**/(#(#(/,*,/(/#/#*#*(*//(#(#((./,/*,,(###((,(((#/#/#*#*/,######./,(,/*//*#*%/%(
+    ,*,*.(,(,/*(#(#(#(/.(((#(#(#.*./,*,,*(#(#(/./*//*(*(*(*(***(#(#(#(*.**,,(#(#(/,((((/#*(*(,*.(#(#((././,***/,(,#*#/
+    ,,.*././,*.,*(#(((/ /#(#(#., *.*.,,/#(#(((* ****,*././,/,,,/#(#(((* *,..(#(#(/.///(*(*(,/,,.(#(#(/ *.*.*,,*,/,(,(*
+    ..., *./.*,,,(#(((((((((.. , , ,.,./((((((* ,,,,., , *.*.,./#(((((, ,,..(#(#(*.*///*/,/./., (#(#(/ , *.,..,.*./.(*
+    .. . * /.*,,,.,((((((((( . , , , ../((#(((, ,... . . , *.,.(((((((, **..(#(#(*.***/,/,/.*.. (#(#(* , , ,..,.,.*./,
+    .. , * /.*,,,.*(#(((((. .,.* * , ,./((#(((* ,... . . , ,.,.(#(#(((, */..(#(#(* ***/,/,/.*.. (#(#(/ , , ,..,.*.*./.
+    ,,.,.*./.*,**,*./(#(#(,.,*.*.* *.,..,(#(#(* ,.,,., , , ,.,,(#(#(#(* //..(#(#(/./***,/,/.*.,.(#(#(/ *.*.*,,*,*././,
+    **,/.(,(,/*//*/./#####,.*/,/,/./.*,,*####(#(*.,,.*.*.*.*.**(###(/.*.(/,,(####/./*//**,/.*.*.#####(././,/**/*(,(,(,
+    //*(,(,#*(*////,(#####*,/(*(,(,/,/***(######/,,,,*.*././*######(/.((#(,,(###((#/*/*,/,/,/,######((./,(*(//(/#*#*#*
+    //*(*#*#/#/((/(,(#%###*,/(/#*#*(*/**/,((######/**/*(*(*######((./,#(#(**,/#%#(##(////*(*########,/,#*#/#(##(%/%*#/
+    /(*(*#*(/#/((/(,##%###*,/(/#*#*#*(///*/,(/(/#########%#%###((,(*#/#(#((#*(/(/#((((((########(//(*#/%/%(%##%(%/%/%/
+    //*(*#*(/#/(//(,(*(*/***/(*(*#*(*(///*/,/././*//*/*(*(*(////(*#/%/#/#/*(*(,/,(*(////(*(*(*/***/(/#/%/%(###%(%/%/%(
+    **,*,#,/*(*//**,/,/,*.,,,**(,(*(,****,/,/./,*.,,,*.*.*,(*///(/(*/,/*(***,*.*./,/,,*,*,/.*.*,*,*/*#/#/#((//(*(/#/#/
+    .,,*./.*,/*/*,/,/./.,.,,.,.*./,*,/***.,.*.*.,,,,.,.*.*.,,*,,*,,./.*.*,.,.*.*.*.*.,*,*,,.*.*..,,*.,,/,(*//**,*././.
+    .,(#(#(*.*,,,,*.*.* /#///#(( *.*,*,,*.,/(((//(....(#(#//#(#(#(//((, ,..,(((((#((/.,.,..., , .,(#/((/./,**,*/#(#(* 
+     .(###/(#*.,,.*.* * *((#(#(( *.*.*,,,.,/(((/,... .(((#//#(#(#///((, .. .(#(//#((/.,.,.. . ,  .(#//(/ /,*,,/(#(#(, 
+    .. ./((##*.,..*., /(////////.,.*.,..*.,/(((/. .. . , *./#((// , , . ....///(##((///.,.. . ,  .(#(((/ *,*..,/(##(, 
+    ...,#####*.,,.,., /((((#(#(#(/ *,*,,,(#(#(((, ..., , *,##(#((., , , . ..(#(#(#((#(((* , , . ..(#(#(/ *,*,,/####(* 
+    .,.,#%#%#/,,,,*.* ((##((##(#((.*,**,*(#(#(* ,...., , /,#####(.,., ,.,...(#(#(#(####(/., , , ..####(/./,/,,/###%#*.
+    ,,.*#%#%#%#**,*./.(##(,.(####(./*/***####(/.*.,,.,.*./*#####(.*.*./.*,,,(###((.*,####(/.*.,.,,#####(./*(**/#%#%#/.
+    **,/,(#%#%#/**/,(#%###*,,*####,(*(/*/#%#%#/.*.,,,*./.(/######,/./,/,*,,*#####(,/,(#####(/.*.*,###%##,(/#//(%%%%#(,
+    **,/,##%%%#//*(,##%##/*,,*#%#%#(,/*/(#%##//./,*,,*,/.(/%#%###,/,(,/,/,,*###%#(,/*//###%#(*/,*,#%#%##,#/#(/(%%%%#(,
+    //*(,##%%%%((*(,(#%#/,//,*#%#%#(,/*###%#(,/.*,**,*,/,(/######,/,(,/,*,,*###%#(,/*///######/,((#%#%##,#(#(/(#%#%#(,
+    //*(,(*###%##*((####/,//*/*(###(,/*(###((./.*,*,,*./.(/######,/,/./,*,,*(####(,/****/*(###((###%#%##,#(#(/(#%#%#(,
+    */,(,(.(##%#%(######*.//*/.*(###((#(#(#((.*.*.,,.,.*./*##(#((,*.*.*.,.,,(#(#((.*,**,*.((####(####%((,(/(/*/*/,/,/.
+    **,/,/.(###(#(#(#(/.*,***/.*(##(#(#(#((.*.* ,...., ,./,(#(#((.*.* ,.,..,(#(#(/.*,,,,*.*.(((#(#(#(#((./*/**/,/,/./.
+    **,/,/ *./#(#(#(#(/ *****/ ,.(((#(#(#(( , , . .. . , *.(#(#((., , , ....(#(#(*.,,,,.*., /((#(#(#(#(/.*,*,,,.*.* * 
+    ,*,/,(,* /#(#(#(#(* **//*/,/ *((#(#(#(/ , , . .  .(#(#((#(#(#(((((, ....(#(#(* ,,,,.*.* , (((#(#(#(/ *.*../(###(, 
+    */*(*(*/ (#####(( * /////(*/ *(##(#(#*/ , * , .. .(#(#((#(#(#(#(((, ....(#(#(* *,,*,*.*., . (#####(/ *.,../####(* 
+    /(/(/#/(.*.,,.*.*.//((///(/( *.*.,..,.*,/./.*.,... , , ,.,..,., , , ,...., , *.*,*/*(*(*(,, .... , *.*.*,,,.*.* * 
+    (((#(%(%(%#####(#(#(#(#((#(#/#/#/((((/(*(*(,/***,*././,/,/**/*(,(,/,*,**,/,/,(,///(/#/#/#/(*/***,/.(./,*,**,*././.
+    """)
+    os.system("pause")
 
 
 
