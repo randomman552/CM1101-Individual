@@ -16,7 +16,7 @@ south and east. The exit is to the west.""",
     "items": [item_biscuits, item_handbook],
 
     "win conditions": {
-        "player inv"
+        
     }
 }
 
