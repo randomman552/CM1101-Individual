@@ -260,6 +260,7 @@ def execute_take(item_id):
         if item_id in current_room["items"]:
             inventory.append(item_id)
             current_room["items"].remove(item_id)
+            print("Picked up " + item_id["name"] + ".")
         else:
             print("You cannot take that.")
     else:
@@ -277,15 +278,20 @@ def execute_drop(item_id):
         if item_id in inventory:
             inventory.remove(item_id)
             current_room["items"].append(item_id)
+            print("Dropped " + item_id["name"] + ".")
         else:
             print("You cannot drop that.")
     else:
         print("That item does not exist.")
     
 def execute_inspect(item_id):
+    """This function takes an item_id as an argument, then prints the description of that item.
+    If the item does not exist then it prints "That item does not exist".
+    """
     if item_id in items:
         item_id = items[item_id]
         if item_id in inventory:
+            print(item_id["name"] + ":")
             print(item_id["description"])
         else:
             print("You cannot inspect that.")
@@ -373,8 +379,7 @@ def check_win_conditions():
     If the win conditions are true then it will return true"""
     Output = False
     #If the reception contains all items, player wins
-    for item in items:
-        item = items[item]
+    for item in rooms["Reception"]["win conditions"]["items"]:
         if item in rooms["Reception"]["items"]:
             Output = True
         else:

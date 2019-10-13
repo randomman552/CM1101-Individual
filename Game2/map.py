@@ -16,7 +16,7 @@ south and east. The exit is to the west.""",
     "items": [item_biscuits, item_handbook],
 
     "win conditions": {
-        
+        "items": [item_handbook, item_id, item_laptop, item_money, item_pen]
     }
 }
 
@@ -96,7 +96,7 @@ room_mystery = {
     "description": """You walk into the room, everything is black, except for the entrance behind you. 
     There is nothing here.""",
     
-    "exits": {"west": "Parking"},
+    "exits": {"somewhere": "Office"},
     
     "items": [item_void],
 
