@@ -233,6 +233,12 @@ def is_valid_exit(exits, chosen_exit):
     """
     return chosen_exit in exits
 
+def calc_inven_mass(inventory):
+    """Calculates the mass of all items in the players inventory"""
+    Output = 0
+    for item in inventory:
+        Output += item["weight"]
+    return Output
 
 def execute_go(direction):
     """This function, given the direction (e.g. "south") updates the current room
@@ -255,6 +261,13 @@ def execute_take(item_id):
     there is no such item in the room, this function prints
     "You cannot take that."
     """
+    #Check if the player has enough space in their inventory to pick up the item.
+    #If they dont print an error and return.
+    inventory_mass = calc_inven_mass(inventory) + items[item_id]["weight"]
+    if inventory_mass > max_carry_weight:
+        print("You cannot carry any more.")
+        return 0
+    #Check if the item exists
     if item_id in items:
         item_id = items[item_id]
         if item_id in current_room["items"]:

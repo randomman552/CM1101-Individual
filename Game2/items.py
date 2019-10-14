@@ -5,7 +5,9 @@ item_id = {
 
     "description":
     """You new shiny student ID card. Expires 1 June 2017.
-You wonder why they have printed a suicide hotline number on it?..."""
+You wonder why they have printed a suicide hotline number on it?...""",
+
+    "weight": 0.1
 }
 
 item_laptop = {
@@ -14,7 +16,9 @@ item_laptop = {
     "name": "laptop",
 
     "description":
-    "It has seen better days. At least it has a WiFi card!"
+    "It has seen better days. At least it has a WiFi card!",
+
+    "weight": 1
 }
 
 item_money = {
@@ -23,7 +27,9 @@ item_money = {
     "name": "money",
 
     "description":
-    "This wad of cash is barely enough to pay your tuition fees."
+    "This wad of cash is barely enough to pay your tuition fees.",
+
+    "weight": 0.1
 }
 
 item_biscuits = {
@@ -31,7 +37,9 @@ item_biscuits = {
 
     "name": "a pack of biscuits",
 
-    "description": "A pack of biscuits."
+    "description": "A pack of biscuits.",
+
+    "weight": 0.5
 }
 
 item_pen = {
@@ -39,7 +47,9 @@ item_pen = {
     
     "name": "a pen",
 
-    "description": "A basic ballpoint pen."
+    "description": "A basic ballpoint pen.",
+
+    "weight": 0.1
 }
 
 item_handbook = {
@@ -47,7 +57,9 @@ item_handbook = {
     
     "name": "a student handbook",
 
-    "description": "This student handbook explains everything. Seriously."
+    "description": "This student handbook explains everything. Seriously.",
+
+    "weight": 0.5
 }
 
 item_void = {
@@ -55,7 +67,9 @@ item_void = {
 
     "name": "the void",
 
-    "description": "B̺͍̹̜̲̖̫E̦͍͇̪͔̿̓ͪ̆͒Hͩ͑Ò͂͐̄̋ͧ͢L̑̎D̰̗̗̠̝ T̡͂̀̄͛̐͗H̛͔̱È V̜̱̺̗͓̽͒ͫͬ́O̶̩͉͈͉̟͕ID̨̙̤̩"
+    "description": "B̺͍̹̜̲̖̫E̦͍͇̪͔̿̓ͪ̆͒Hͩ͑Ò͂͐̄̋ͧ͢L̑̎D̰̗̗̠̝ T̡͂̀̄͛̐͗H̛͔̱È V̜̱̺̗͓̽͒ͫͬ́O̶̩͉͈͉̟͕ID̨̙̤̩",
+
+    "weight": 2
 }
 items = {
     "id": item_id,
