@@ -215,9 +215,7 @@ def move(exits, direction):
     False
     """
 
-    Output = ""
-    Output = rooms[exits[direction]]
-    return Output
+    return rooms[exits[direction]]
 
 
 
